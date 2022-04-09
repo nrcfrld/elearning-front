@@ -213,8 +213,7 @@ export default {
     }),
   },
   watch: {
-    currentPage(val) {
-      console.log('Page : ', val)
+    currentPage() {
       this.loadData()
     },
   },
@@ -224,7 +223,6 @@ export default {
   methods: {
     async loadData() {
       try {
-        console.log(this.currentPage)
         this.isBusy = true
         const response = await useJwt.axiosIns(
           `${process.env.VUE_APP_API_BASE_URL}/orders`,

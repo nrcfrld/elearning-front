@@ -371,8 +371,8 @@ export default {
           this.$router.push({
             name: 'courses-edit',
             params: {
-              id: response.data.data.id
-            }
+              id: response.data.data.id,
+            },
           })
         }
       } catch (error) {
@@ -443,8 +443,6 @@ export default {
       })
     },
     inputImageRenderer(e) {
-      console.log(e.target.files[0])
-
       const ofReader = new FileReader()
 
       ofReader.readAsDataURL(this.$refs.refImageInput.files[0])

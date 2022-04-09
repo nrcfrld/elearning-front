@@ -240,8 +240,7 @@ export default {
     }
   },
   watch: {
-    currentPage(val) {
-      console.log('Page : ', val)
+    currentPage() {
       this.loadItems()
     },
   },
@@ -251,7 +250,6 @@ export default {
   methods: {
     async loadItems() {
       try {
-        console.log(this.currentPage)
         this.isBusy = true
         const response = await useJwt.axiosIns(
           `${process.env.VUE_APP_API_BASE_URL}/courses`,

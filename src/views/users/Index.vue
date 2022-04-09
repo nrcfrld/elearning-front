@@ -281,8 +281,7 @@ export default {
     }),
   },
   watch: {
-    currentPage(val) {
-      console.log('Page : ', val)
+    currentPage() {
       this.loadUsers()
     },
   },
@@ -292,7 +291,6 @@ export default {
   methods: {
     async loadUsers() {
       try {
-        console.log(this.currentPage)
         this.isBusy = true
         const response = await useJwt.axiosIns(
           `${process.env.VUE_APP_API_BASE_URL}/users`,
