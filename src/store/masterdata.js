@@ -22,7 +22,7 @@ export default {
 
         return commit('SET_ROLES', response.data.data)
       } catch (error) {
-        return console.error(error)
+        return error
       }
     },
   },
