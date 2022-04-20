@@ -2,8 +2,12 @@
   <div
     class="main-menu menu-fixed menu-accordion menu-shadow"
     :class="[
-      { 'expanded': !isVerticalMenuCollapsed || (isVerticalMenuCollapsed && isMouseHovered) },
-      skin === 'semi-dark' ? 'menu-dark' : 'menu-light'
+      {
+        expanded:
+          !isVerticalMenuCollapsed ||
+          (isVerticalMenuCollapsed && isMouseHovered),
+      },
+      skin === 'semi-dark' ? 'menu-dark' : 'menu-light',
     ]"
     @mouseenter="updateMouseHovered(true)"
     @mouseleave="updateMouseHovered(false)"
@@ -17,18 +21,11 @@
         :collapseTogglerIcon="collapseTogglerIcon"
       >
         <ul class="nav navbar-nav flex-row">
-
           <!-- Logo & Text -->
           <li class="nav-item mr-auto">
-            <b-link
-              class="navbar-brand"
-              to="/"
-            >
+            <b-link class="navbar-brand" to="/">
               <span class="brand-logo">
-                <b-img
-                  :src="appLogoImage"
-                  alt="logo"
-                />
+                <b-img :src="appLogoImage" alt="logo" />
               </span>
               <h2 class="brand-text">
                 {{ appName }}
@@ -59,20 +56,21 @@
     <!-- / main menu header-->
 
     <!-- Shadow -->
-    <div
-      :class="{'d-block': shallShadowBottom}"
-      class="shadow-bottom"
-    />
+    <div :class="{ 'd-block': shallShadowBottom }" class="shadow-bottom" />
 
     <!-- main menu content-->
     <vue-perfect-scrollbar
       :settings="perfectScrollbarSettings"
       class="main-menu-content scroll-area"
       tagname="ul"
-      @ps-scroll-y="evt => { shallShadowBottom = evt.srcElement.scrollTop > 0 }"
+      @ps-scroll-y="
+        evt => {
+          shallShadowBottom = evt.srcElement.scrollTop > 0
+        }
+      "
     >
       <vertical-nav-menu-items
-        :items="navMenuItems"
+        :items="menuItemsFiltered"
         class="navigation navigation-main"
       />
     </vue-perfect-scrollbar>
@@ -106,6 +104,10 @@ export default {
       type: Function,
       required: true,
     },
+    role: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const {
@@ -117,6 +119,7 @@ export default {
     } = useVerticalNavMenu(props)
 
     const { skin } = useAppConfig()
+    console.log(props)
 
     // Shadow bottom is UI specific and can be removed by user => It's not in `useVerticalNavMenu`
     const shallShadowBottom = ref(false)
@@ -128,13 +131,28 @@ export default {
       wheelPropagation: false,
     }
 
-    const collapseTogglerIconFeather = computed(() => (collapseTogglerIcon.value === 'unpinned' ? 'CircleIcon' : 'DiscIcon'))
+    const collapseTogglerIconFeather = computed(() =>
+      collapseTogglerIcon.value === 'unpinned' ? 'CircleIcon' : 'DiscIcon'
+    )
 
     // App Name
     const { appName, appLogoImage } = $themeConfig.app
 
+    const menuItemsFiltered = navMenuItems.filter(item => {
+      if (props.role.name === 'admin') {
+        return true
+      }
+
+      if (item.mentorCanAccess && props.role.name === 'mentor') {
+        return true
+      }
+      return false
+    })
+
+    console.log(menuItemsFiltered)
+
     return {
-      navMenuItems,
+      menuItemsFiltered,
       perfectScrollbarSettings,
       isVerticalMenuCollapsed,
       collapseTogglerIcon,
@@ -158,5 +176,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@core/scss/base/core/menu/menu-types/vertical-menu.scss";
+@import '~@core/scss/base/core/menu/menu-types/vertical-menu.scss';
 </style>
